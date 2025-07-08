@@ -22,3 +22,19 @@ export const tokenProvider = async () => {
 
   return token;
 };
+
+export const guestTokenProvider = async () => {
+  if (!STREAM_API_KEY) throw new Error('Stream API key secret is missing');
+  if (!STREAM_API_SECRET) throw new Error('Stream API secret is missing');
+
+  const streamClient = new StreamClient(STREAM_API_KEY, STREAM_API_SECRET);
+
+  const expirationTime = Math.floor(Date.now() / 1000) + 3600;
+  const issuedAt = Math.floor(Date.now() / 1000) - 60;
+
+  // Create a guest user ID for the token
+  const guestUserId = `guest-${Date.now()}`;
+  const token = streamClient.createToken(guestUserId, expirationTime, issuedAt);
+
+  return token;
+};
