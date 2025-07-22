@@ -10,8 +10,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const {  error } = await resend.emails.send({
-      from: 'GoPro Connect <onboarding@resend.dev>',
+    const { data, error } = await resend.emails.send({
+      from: 'GoPro Support <support@goproibpl.com>',
       to,
       subject: 'You are invited to a meeting!',
       html: `<p>You have been invited to a meeting. Click the link below to join:</p><a href="${meetingLink}">${meetingLink}</a>`,
