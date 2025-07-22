@@ -13,6 +13,7 @@ import { Textarea } from './ui/textarea';
 import ReactDatePicker from 'react-datepicker';
 import { useToast } from './ui/use-toast';
 import { Input } from './ui/input';
+import InviteByEmailModal from './InviteByEmailModal';
 
 const initialValues = {
   dateTime: new Date(),
@@ -30,6 +31,7 @@ const MeetingTypeList = () => {
   const client = useStreamVideoClient();
   const { user } = useUser();
   const { toast } = useToast();
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   const createMeeting = async () => {
     if (!client || !user) return;
@@ -134,19 +136,33 @@ const MeetingTypeList = () => {
           </div>
         </MeetingModal>
       ) : (
-        <MeetingModal
-          isOpen={meetingState === 'isScheduleMeeting'}
-          onClose={() => setMeetingState(undefined)}
-          title="Meeting Created"
-          handleClick={() => {
-            navigator.clipboard.writeText(meetingLink);
-            toast({ title: 'Link Copied' });
-          }}
-          image={'/icons/checked.svg'}
-          buttonIcon="/icons/copy.svg"
-          className="text-center"
-          buttonText="Copy Meeting Link"
-        />
+        <>
+          <MeetingModal
+            isOpen={meetingState === 'isScheduleMeeting'}
+            onClose={() => setMeetingState(undefined)}
+            title="Meeting Created"
+            handleClick={() => {
+              navigator.clipboard.writeText(meetingLink);
+              toast({ title: 'Link Copied' });
+            }}
+            image={'/icons/checked.svg'}
+            buttonIcon="/icons/copy.svg"
+            className="text-center"
+            buttonText="Copy Meeting Link"
+          >
+            <button
+              className="mt-4 bg-blue-1 text-white rounded px-4 py-2 w-full"
+              onClick={() => setInviteModalOpen(true)}
+            >
+              Invite by Email
+            </button>
+          </MeetingModal>
+          <InviteByEmailModal
+            open={inviteModalOpen}
+            onClose={() => setInviteModalOpen(false)}
+            meetingLink={meetingLink}
+          />
+        </>
       )}
 
       <MeetingModal

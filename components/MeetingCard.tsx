@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { avatarImages } from "@/constants";
 import { useToast } from "./ui/use-toast";
+import InviteByEmailModal from './InviteByEmailModal';
+import { useState } from 'react';
 
 interface MeetingCardProps {
   title: string;
@@ -29,6 +31,7 @@ const MeetingCard = ({
   buttonText,
 }: MeetingCardProps) => {
   const { toast } = useToast();
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   return (
     <section className="flex min-h-[258px] w-full flex-col justify-between rounded-[14px] bg-dark-1 px-5 py-8 xl:max-w-[568px]">
@@ -59,31 +62,50 @@ const MeetingCard = ({
           </div>
         </div>
         {!isPreviousMeeting && (
-          <div className="flex gap-2">
-            <Button onClick={handleClick} className="rounded bg-blue-1 px-6">
-              {buttonIcon1 && (
-                <Image src={buttonIcon1} alt="feature" width={20} height={20} />
-              )}
-              &nbsp; {buttonText}
-            </Button>
-            <Button
-              onClick={() => {
-                navigator.clipboard.writeText(link);
-                toast({
-                  title: "Link Copied",
-                });
-              }}
-              className="bg-dark-4 px-6"
-            >
-              <Image
-                src="/icons/copy.svg"
-                alt="feature"
-                width={20}
-                height={20}
-              />
-              &nbsp; Copy Link
-            </Button>
-          </div>
+          <>
+            <div className="flex gap-2">
+              <Button onClick={handleClick} className="rounded bg-blue-1 px-6">
+                {buttonIcon1 && (
+                  <Image src={buttonIcon1} alt="feature" width={20} height={20} />
+                )}
+                &nbsp; {buttonText}
+              </Button>
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(link);
+                  toast({
+                    title: "Link Copied",
+                  });
+                }}
+                className="bg-dark-4 px-6"
+              >
+                <Image
+                  src="/icons/copy.svg"
+                  alt="feature"
+                  width={20}
+                  height={20}
+                />
+                &nbsp; Copy Link
+              </Button>
+              <Button
+                onClick={() => setInviteModalOpen(true)}
+                className="bg-blue-1 px-6"
+              >
+                <Image
+                  src="/icons/share.svg"
+                  alt="invite"
+                  width={20}
+                  height={20}
+                />
+                &nbsp; Invite by Email
+              </Button>
+            </div>
+            <InviteByEmailModal
+              open={inviteModalOpen}
+              onClose={() => setInviteModalOpen(false)}
+              meetingLink={link}
+            />
+          </>
         )}
       </article>
     </section>
